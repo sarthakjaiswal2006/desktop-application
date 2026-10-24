@@ -1,25 +1,62 @@
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 function App() {
   const videoRef = useRef(null);
+  const streamRef = useRef(null);
+
   const [cameraOn, setCameraOn] = useState(false);
+  const [fullScreen, setFullScreen] = useState(false);
 
   async function getCamera() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: false,
+        audio: false
       });
 
+      streamRef.current = stream;
       videoRef.current.srcObject = stream;
+      await videoRef.current.play();
+
       setCameraOn(true);
     } catch (error) {
       console.log(error);
       alert("Unable to access camera. Please allow camera permission.");
     }
   }
+
+  async function enableFullScreen() {
+    try {
+      await document.documentElement.requestFullscreen();
+    } catch (error) {
+      console.log(error);
+      alert("Unable to enter fullscreen.");
+    }
+  }
+
+  useEffect(() => {
+    function handleFullScreenChange() {
+      setFullScreen(Boolean(document.fullscreenElement));
+    }
+
+    document.addEventListener(
+      "fullscreenchange",
+      handleFullScreenChange
+    );
+
+    return () => {
+      document.removeEventListener(
+        "fullscreenchange",
+        handleFullScreenChange
+      );
+
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, []);
 
   return (
     <div className="app">
@@ -35,7 +72,6 @@ function App() {
       </nav>
 
       <main className="main-content">
-
         <section className="camera-card">
           <div className="card-heading">
             <div>
@@ -76,11 +112,26 @@ function App() {
               </button>
             )}
           </div>
+
+          <div className="fullscreen-section">
+            <h3>Fullscreen Setup</h3>
+            <p>
+              Enter fullscreen before starting your examination.
+            </p>
+
+            <button
+              onClick={enableFullScreen}
+              disabled={fullScreen}
+            >
+              {fullScreen
+                ? "Fullscreen Enabled ✓"
+                : "Enable Fullscreen →"}
+            </button>
+          </div>
         </section>
 
         <div className="info-card">
           <div className="info-icon">✓</div>
-
           <div>
             <h3>Before you begin</h3>
             <p>

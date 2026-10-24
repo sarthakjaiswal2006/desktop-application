@@ -1,19 +1,4 @@
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #ffffff;
-  color: #292d38;
-}
-
-#root {
-  min-height: 100vh;
-}
-
 .app {
   min-height: 100vh;
   background: #ffffff;
@@ -45,7 +30,7 @@ body {
   justify-content: center;
   align-items: center;
   background: #00b8a9;
-  color: white;
+  color: #ffffff;
   border-radius: 10px;
   font-size: 22px;
   font-weight: bold;
@@ -60,26 +45,11 @@ body {
   font-size: 14px;
 }
 
-/* Main section */
+/* Main content */
 .main-content {
   width: 90%;
   max-width: 1000px;
   margin: 55px auto;
-}
-
-.tag {
-  color: #0878ff;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 1.5px;
-}
-
-
-
-.subtitle {
-  color: #626a7b;
-  font-size: 15px;
-  line-height: 1.7;
 }
 
 /* Camera card */
@@ -141,7 +111,7 @@ body {
   background: #22c55e;
 }
 
-/* Camera preview */
+/* Video preview */
 .video-container {
   position: relative;
   width: 100%;
@@ -199,7 +169,7 @@ body {
   font-size: 14px;
 }
 
-/* Button */
+/* Buttons */
 .card-footer {
   display: flex;
   justify-content: space-between;
@@ -215,7 +185,8 @@ body {
   font-size: 13px;
 }
 
-.card-footer button {
+.card-footer button,
+.fullscreen-section button {
   padding: 13px 20px;
   border: none;
   border-radius: 8px;
@@ -224,16 +195,40 @@ body {
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
-.card-footer button:hover {
+.card-footer button:hover,
+.fullscreen-section button:hover:not(:disabled) {
   background: #0064df;
 }
 
 .card-footer button span {
   margin-left: 12px;
   font-size: 17px;
+}
+
+/* Fullscreen section */
+.fullscreen-section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #e1e5ed;
+}
+
+.fullscreen-section h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  color: #292d38;
+}
+
+.fullscreen-section p {
+  margin: 0 0 16px;
+  color: #697386;
+  font-size: 14px;
+}
+
+.fullscreen-section button:disabled {
+  background: #16834a;
+  cursor: default;
 }
 
 /* Information card */
@@ -273,7 +268,13 @@ body {
   line-height: 1.7;
 }
 
-/* Responsive */
+/* Keyboard focus */
+button:focus-visible {
+  outline: 2px solid #0878ff;
+  outline-offset: 3px;
+}
+
+/* Responsive layout */
 @media (max-width: 600px) {
   .navbar {
     height: 65px;
@@ -307,7 +308,8 @@ body {
     flex-direction: column;
   }
 
-  .card-footer button {
+  .card-footer button,
+  .fullscreen-section button {
     width: 100%;
   }
 
