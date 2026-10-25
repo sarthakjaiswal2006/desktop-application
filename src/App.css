@@ -318,3 +318,43 @@ button:focus-visible {
     line-height: 1.5;
   }
 }
+ 
+
+.start-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e1e5ed;
+  text-align: right;
+}
+
+.start-button {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 8px;
+  background: #0878ff;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.start-button:hover:not(:disabled) {
+  background: #0064df;
+}
+
+.start-button:disabled {
+  background: #aeb8c7;
+  cursor: not-allowed;
+}
+
+.start-section p {
+  color: #697386;
+  font-size: 13px;
+}
+
+.test-screen {
+  min-height: 100vh;
+  padding: 40px;
+  text-align: center;
+  background: white;
+}

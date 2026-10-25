@@ -8,12 +8,13 @@ function App() {
 
   const [cameraOn, setCameraOn] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
+  const [testStarted, setTestStarted] = useState(false);
 
   async function getCamera() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: false
+        audio: false,
       });
 
       streamRef.current = stream;
@@ -41,10 +42,7 @@ function App() {
       setFullScreen(Boolean(document.fullscreenElement));
     }
 
-    document.addEventListener(
-      "fullscreenchange",
-      handleFullScreenChange
-    );
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
 
     return () => {
       document.removeEventListener(
@@ -57,6 +55,34 @@ function App() {
       }
     };
   }, []);
+
+  async function startTest() {
+    if (!cameraOn || !fullScreen) {
+      alert("Enable your camera and fullscreen first.");
+      return;
+    }
+
+    try {
+      if (window.electronAPI) {
+        await window.electronAPI.startTest();
+      }
+
+      setTestStarted(true);
+    } catch (error) {
+      console.log(error);
+      alert("Unable to start the test.");
+    }
+  }
+
+  if (testStarted) {
+    return (
+      <div className="app test-screen">
+        <h1>Newton Athena</h1>
+        <h2>Your test has started!</h2>
+        <p>Your camera is active. Questions will appear here next.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="app">
@@ -76,7 +102,7 @@ function App() {
           <div className="card-heading">
             <div>
               <h2>Camera Setup</h2>
-              <p>Make sure your camera is working correctly.</p>
+              <p>Complete the setup before starting your test.</p>
             </div>
 
             <span className={cameraOn ? "status active" : "status"}>
@@ -104,11 +130,11 @@ function App() {
           </div>
 
           <div className="card-footer">
-            <p>🔒 Your camera preview stays on this screen.</p>
+            <p>Camera access is required for your test.</p>
 
             {!cameraOn && (
               <button onClick={getCamera}>
-                Get Camera Access <span>→</span>
+                Get Camera Access →
               </button>
             )}
           </div>
@@ -116,30 +142,33 @@ function App() {
           <div className="fullscreen-section">
             <h3>Fullscreen Setup</h3>
             <p>
-              Enter fullscreen before starting your examination.
+              {fullScreen
+                ? "Fullscreen is enabled."
+                : "Enter fullscreen before starting your test."}
             </p>
 
             <button
               onClick={enableFullScreen}
               disabled={fullScreen}
             >
-              {fullScreen
-                ? "Fullscreen Enabled ✓"
-                : "Enable Fullscreen →"}
+              {fullScreen ? "Fullscreen Enabled ✓" : "Enable Fullscreen →"}
             </button>
           </div>
-        </section>
 
-        <div className="info-card">
-          <div className="info-icon">✓</div>
-          <div>
-            <h3>Before you begin</h3>
-            <p>
-              Sit in a well-lit room and ensure your face is clearly
-              visible. Your camera will remain on during the exam.
-            </p>
+          <div className="start-section">
+            <button
+              className="start-button"
+              onClick={startTest}
+              disabled={!cameraOn || !fullScreen}
+            >
+              Start Test →
+            </button>
+
+            {(!cameraOn || !fullScreen) && (
+              <p>Enable camera and fullscreen to continue.</p>
+            )}
           </div>
-        </div>
+        </section>
       </main>
     </div>
   );
